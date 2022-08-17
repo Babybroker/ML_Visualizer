@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 
 from Visualizer.VisualBody import VisualizerBody
 
+
 class LossVisualizer(VisualizerBody):
     def __init__(
             self,
@@ -9,7 +10,7 @@ class LossVisualizer(VisualizerBody):
     ):
         super().__init__(main_file_folder)
 
-    def plot_loss_xgb(self,eval_result, eval_metric, save_visual=False, timestamp=None, folder_name=None):
+    def plot_loss_xgb(self, eval_result, eval_metric, save_visual=False, timestamp=None, folder_name=None):
         for metric in eval_metric:
             epochs = len(eval_result['eval'][metric])
             x_axis = range(0, epochs)
@@ -23,8 +24,7 @@ class LossVisualizer(VisualizerBody):
             self.save_func(save_visual=save_visual, timestamp=timestamp, folder_name=folder_name, filename='XGB_loss')
             plt.show()
 
-
-    def plot_loss_dnn(self,history, model_name, loss, metrics, save_visual=False, timestamp=None, folder_name=None):
+    def plot_loss_dnn(self, history, model_name, loss, metrics, save_visual=False, timestamp=None, folder_name=None):
         plt.rcParams.update({'figure.figsize': (13, 7), 'figure.dpi': 240})  # Set figure details
         total_length = 1 + len(metrics)
         fig, axs = plt.subplots(total_length, 1, constrained_layout=True)

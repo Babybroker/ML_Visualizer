@@ -5,18 +5,20 @@ import numpy as np
 from scipy.stats import gaussian_kde
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
-from src.visualizations.save_function import save_func
+from Visualizer.VisualBody import VisualizerBody
 
 
-class ForecastVisualizer:
+class ForecastVisualizer(VisualizerBody):
     def __init__(
             self,
             result_df,
             timestamp,
             target_col,
             predict_col,
+            main_file_folder,
             folder_name=None
     ):
+        super().__init__(main_file_folder)
         self.target_col = target_col
         self.predict_col = predict_col
         self.folder_name = folder_name
@@ -39,7 +41,7 @@ class ForecastVisualizer:
         if extra_title_addition is not None:
             title = title + ' ' + extra_title_addition
         plt.title(title)
-        save_func(save_visual=save_visual, timestamp=self.timestamp, folder_name=self.folder_name, filename='result_heatmap')
+        self.save_func(save_visual=save_visual, timestamp=self.timestamp, folder_name=self.folder_name, filename='result_heatmap')
         plt.show()
 
     def plot_scatter(self, extra_title_addition=None,  custom_xlabel=None, custom_ylabel=None, hue=None,
@@ -96,7 +98,7 @@ class ForecastVisualizer:
         if custom_ylabel is not None:
             ax.set(ylabel=custom_ylabel)
         plt.title(title)
-        save_func(save_visual=save_visual, timestamp=self.timestamp, folder_name=self.folder_name, filename='scatter')
+        self.save_func(save_visual=save_visual, timestamp=self.timestamp, folder_name=self.folder_name, filename='scatter')
         plt.show()
 
     def print_scores(self):
@@ -135,7 +137,7 @@ class ForecastVisualizer:
             if i == 0:
                 plt.legend(['Actual', 'Prediction'])
         plt.tight_layout()
-        save_func(save_visual=save_visual, timestamp=self.timestamp, folder_name=self.folder_name, filename='timestep')
+        self.save_func(save_visual=save_visual, timestamp=self.timestamp, folder_name=self.folder_name, filename='timestep')
         plt.show()
 
     def plot_residuals(self, custom_ylabel=None, extra_title_addition=None, train_set=False,
@@ -164,7 +166,7 @@ class ForecastVisualizer:
         if extra_title_addition is not None:
             title = title + ' ' + extra_title_addition
         plt.title(title)
-        save_func(save_visual=save_visual, timestamp=self.timestamp, folder_name=self.folder_name, filename='residuals')
+        self.save_func(save_visual=save_visual, timestamp=self.timestamp, folder_name=self.folder_name, filename='residuals')
         plt.show()
 
     def plot_residual_dist(self, capacity_col=None, save_visual=False):
@@ -178,7 +180,7 @@ class ForecastVisualizer:
         else:
             residuals = (self.result_df[self.predict_col] - self.result_df[self.target_col]) / self.result_df[capacity_col]
         sns.displot(residuals)
-        save_func(save_visual=save_visual, timestamp=self.timestamp, folder_name=self.folder_name, filename='residual_distribution')
+        self.save_func(save_visual=save_visual, timestamp=self.timestamp, folder_name=self.folder_name, filename='residual_distribution')
         plt.show()
 
     def plot_residuals_over_time(self, target_unit=None, save_visual=False):
@@ -189,6 +191,6 @@ class ForecastVisualizer:
         f = sns.scatterplot(x=self.result_df.index, y=residuals, s=2, alpha=0.5)
         ax.set(ylabel=f'Residuals {target_unit}')
         plt.title('The residuals over time')
-        save_func(save_visual=save_visual, timestamp=self.timestamp, folder_name=self.folder_name, filename='residuals_time')
+        self.save_func(save_visual=save_visual, timestamp=self.timestamp, folder_name=self.folder_name, filename='residuals_time')
         plt.show()
 
